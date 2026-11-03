@@ -1,0 +1,12 @@
+# One-click deploy on Render (render.com): New > Blueprint > pick this repository.
+services:
+  - type: web
+    name: grid-auction
+    runtime: node
+    plan: free
+    buildCommand: "echo 'client is pre-built in public/f1a'"
+    startCommand: node src/f1a/server/main.ts
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: 22.20.0

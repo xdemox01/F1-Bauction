@@ -1,0 +1,9 @@
+node_modules/
+.next/
+out/
+.env*.local
+*.tsbuildinfo
+next-env.d.ts
+/tmp-db/
+/preview/
+# public/play is built by `npm run build:play`, but is committed so the game opens without installing anything.

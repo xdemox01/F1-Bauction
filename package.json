@@ -1,0 +1,36 @@
+{
+  "name": "f1-footbauction",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Grid Auction: multiplayer F1-themed auction and racing game (unofficial fan project).",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "build:play": "node scripts/build-play.mjs",
+    "predev": "node scripts/build-play.mjs",
+    "dev": "next dev",
+    "prebuild": "node scripts/build-play.mjs",
+    "build": "next build",
+    "start": "node src/f1a/server/main.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test \"tests/unit/**/*.test.ts\"",
+    "test:e2e": "node scripts/build-play.mjs && node tests/e2e/f1a.e2e.cjs && node tests/e2e/grid.e2e.cjs && node tests/e2e/play.e2e.cjs",
+    "test:db": "bash scripts/test-db.sh",
+    "seed:generate": "node scripts/generate-seed.ts"
+  },
+  "dependencies": {
+    "next": "^16.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "typescript": "^5.9.0",
+    "esbuild": "^0.25.0",
+    "playwright": "^1.55.0"
+  }
+}
