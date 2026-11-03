@@ -1,0 +1,227 @@
+/* Collectible card. Structure: .card (rarity ring) > .card__frame (surface).
+   Rarity drives the ring, plate and stat colours; category drives layout and art. */
+
+.card {
+  --tier: #9aa3ad;
+  --tier-ink: #15171a;
+  --ring: linear-gradient(160deg, #b8c0c8, #6b737c);
+  --surface: linear-gradient(180deg, #2a2d33 0%, #1f2126 100%);
+  --team-accent: #8b919a;
+
+  position: relative;
+  aspect-ratio: 5 / 7;
+  width: 100%;
+  padding: 3px;
+  border-radius: 12px;
+  background: var(--ring);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 12px 28px -14px rgb(0 0 0 / 0.8);
+  container-type: inline-size;
+  transition: transform 180ms ease;
+  color: var(--kerb, #eef0f2);
+}
+.card--lg { max-width: 360px; }
+
+.card[data-rarity="rare"] {
+  --tier: #4f9fe6;
+  --ring: linear-gradient(160deg, #7cc0ff, #2a5f99);
+  --surface: linear-gradient(180deg, #23303f 0%, #1c2128 100%);
+}
+.card[data-rarity="epic"] {
+  --tier: #a87cf0;
+  --ring: linear-gradient(160deg, #c9a6ff, #5b3a96);
+  --surface: linear-gradient(180deg, #2c2540 0%, #1e1d26 100%);
+}
+.card[data-rarity="mythic"] {
+  --tier: #f0b54a;
+  --ring: linear-gradient(160deg, #ffe2a1 0%, #c98a1c 45%, #fff0c8 60%, #8a5a0e 100%);
+  --surface: linear-gradient(180deg, #3a2f1c 0%, #201d18 100%);
+}
+/* Apex: the one bold effect. A slow prismatic foil travels round the ring. */
+.card[data-rarity="apex"] {
+  --tier: #ff8a7a;
+  --ring: conic-gradient(from var(--foil-angle, 0deg), #ff6b6b, #ffd36b, #6bffb8, #6bc8ff, #c56bff, #ff6b6b);
+  --surface: radial-gradient(120% 70% at 50% 0%, #3b2430 0%, #1d1a1f 70%);
+  animation: foil 9s linear infinite;
+}
+@property --foil-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes foil { to { --foil-angle: 360deg; } }
+
+.card__frame {
+  position: relative;
+  height: 100%;
+  border-radius: 9px;
+  background: var(--surface);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Header: stamped chassis plate with the overall rating */
+.card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 7cqi 7cqi 0;
+  position: relative;
+  z-index: 2;
+}
+.card__plate {
+  display: grid;
+  justify-items: center;
+  background: var(--tier);
+  color: var(--tier-ink);
+  border-radius: 4px;
+  padding: 1.5cqi 3.5cqi 2cqi;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.45) inset, 0 -2px 0 rgb(0 0 0 / 0.25) inset;
+}
+.card[data-rarity="apex"] .card__plate { background: linear-gradient(135deg, #ffd36b, #ff8a7a 55%, #c56bff); }
+.card__overall {
+  font-family: var(--font-display, sans-serif);
+  font-weight: 700;
+  font-size: 17cqi;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+.card__category {
+  font-size: 4.6cqi;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.card__tier { display: grid; justify-items: end; gap: 1cqi; text-align: right; }
+.card__rarity {
+  font-family: var(--font-display, sans-serif);
+  font-weight: 600;
+  font-size: 6.5cqi;
+  color: var(--tier);
+}
+.card__edition {
+  font-size: 4.4cqi;
+  padding: 0.6cqi 2.2cqi;
+  border: 1px solid color-mix(in srgb, var(--tier) 60%, transparent);
+  border-radius: 99px;
+  color: #e6e8eb;
+}
+
+/* Art area (placeholder motifs, no protected imagery) */
+.card-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin: 2cqi 0 0;
+  min-height: 0;
+}
+.card-art svg { fill: color-mix(in srgb, var(--team-accent) 70%, #ffffff 10%); }
+
+.card-art--driver::before {
+  /* Diagonal livery band in the team accent */
+  content: "";
+  position: absolute;
+  inset: 8% -20%;
+  background: repeating-linear-gradient(115deg, transparent 0 9%, color-mix(in srgb, var(--team-accent) 22%, transparent) 9% 18%);
+  z-index: -1;
+}
+.card-art__monogram {
+  position: absolute;
+  font-family: var(--font-display, sans-serif);
+  font-weight: 700;
+  font-size: 40cqi;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--tier) 30%, transparent);
+  letter-spacing: -0.02em;
+  z-index: -1;
+}
+.card-art__helmet { width: 58%; filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.5)); }
+.card-art__visor { fill: #101215 !important; }
+
+.card-art--car::before {
+  content: "";
+  position: absolute;
+  inset: 22% 0;
+  background: repeating-linear-gradient(180deg, transparent 0 14%, color-mix(in srgb, var(--team-accent) 20%, transparent) 14% 16%);
+  z-index: -1;
+}
+.card-art__car { width: 88%; filter: drop-shadow(0 8px 8px rgb(0 0 0 / 0.55)); }
+.card-art__cockpit { fill: #101215 !important; }
+.card-art__wheel { fill: #101215 !important; stroke: color-mix(in srgb, var(--tier) 70%, #fff 0%); stroke-width: 3; }
+
+.card-art--crew::before {
+  content: "";
+  position: absolute;
+  width: 62%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: repeating-conic-gradient(color-mix(in srgb, var(--team-accent) 22%, transparent) 0 6deg, transparent 6deg 18deg);
+  z-index: -1;
+}
+.card-art__tyre { width: 40%; filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.5)); }
+.card-art__tyre-wall { fill: #121418 !important; stroke: color-mix(in srgb, var(--tier) 60%, transparent); stroke-width: 3; }
+.card-art__rim { fill: color-mix(in srgb, var(--team-accent) 60%, #2a2d33) !important; }
+.card-art__nut { fill: var(--tier) !important; }
+.card-art__spoke { stroke: #121418; stroke-width: 4; }
+
+/* Identity */
+.card__id { padding: 0 7cqi; min-width: 0; }
+.card__name {
+  font-family: var(--font-display, sans-serif);
+  font-weight: 700;
+  font-size: 10cqi;
+  line-height: 1;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 2cqi;
+  margin: 1.4cqi 0 0;
+  font-size: 5.2cqi;
+  color: #aeb3ba;
+}
+.card__meta span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Stats: a row of stamped cells; count varies by category */
+.card__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6cqi;
+  margin: 4cqi 7cqi 0;
+  padding: 0;
+}
+.card__stats[data-count="4"] { grid-template-columns: repeat(4, 1fr); }
+.card__stats[data-count="5"] { grid-template-columns: repeat(5, 1fr); }
+.card__stat {
+  background: rgb(0 0 0 / 0.28);
+  border-top: 2px solid color-mix(in srgb, var(--tier) 75%, transparent);
+  border-radius: 2px;
+  padding: 1.2cqi 0 1.4cqi;
+  text-align: center;
+}
+.card__stat dt { font-size: 4.2cqi; color: #9ba1a9; font-weight: 600; letter-spacing: 0.04em; }
+.card__stat dd {
+  margin: 0;
+  font-family: var(--font-display, sans-serif);
+  font-weight: 600;
+  font-size: 8cqi;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.card[data-category="driver"] .card__stats { grid-template-columns: repeat(3, 1fr); }
+
+.card__foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 2cqi;
+  padding: 3cqi 7cqi 5cqi;
+  font-size: 4.4cqi;
+  color: #8b919a;
+}
+.card__serial { color: var(--tier); font-weight: 600; margin-left: auto; }
